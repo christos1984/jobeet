@@ -8,6 +8,7 @@ parameters:
      max_jobs_on_category: 20
      jobs_directory: '%kernel.project_dir%/public/uploads/jobs'
      jobs_web_directory: '/uploads/jobs'
+     max_per_page: 10
 
 services:
     # default configuration for services in *this* file
@@ -39,6 +40,7 @@ services:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
             - { name: doctrine.event_listener, event: postLoad }
+
     App\EventListener\JobTokenListener:
         tags:
             - { name: doctrine.event_listener, event: prePersist }

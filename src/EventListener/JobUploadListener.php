@@ -27,6 +27,9 @@ class JobUploadListener
     {
         $this->logger->info('entering prepersist');
         $entity = $args->getEntity();
+        if (!$entity instanceof Job) {
+            return;
+        }
         $this->uploadFile($entity);
     }
 
@@ -36,6 +39,9 @@ class JobUploadListener
     public function preUpdate(PreUpdateEventArgs $args)
     {
         $entity = $args->getEntity();
+        if (!$entity instanceof Job) {
+            return;
+        }
         $this->logger->info('entering update');
         $this->uploadFile($entity);
     }

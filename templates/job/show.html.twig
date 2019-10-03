@@ -1,13 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+     {% if hasControlAccess is defined and hasControlAccess %}
+         {% include 'job/control_panel.html.twig' with {'job': job, 'deleteForm': deleteForm, 'publishForm': publishForm} %}
+     {% endif %}
+
+     {% for message in app.flashes('notice') %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
     <h1>Job</h1>
 
     <div class="media" style="margin-top: 60px;">
         {% if job.logo %}
             <div class="media-left">
                 <a href="{{ job.url }}" target="_blank">
-                    <img class="media-object" style="width:100px; height:100px;" src="{{ asset(jobs_web_directory ~ '/' ~ job.logo) }}">
+                    <img class="media-object" style="width:100px; height:100px;" src="{{ asset(jobs_web_directory ~ '/' ~ job.logo.filename) }}">
                 </a>
             </div>
         {% endif %}
