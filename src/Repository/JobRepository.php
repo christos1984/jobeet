@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Affiliate;
 use App\Entity\Job;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
@@ -62,4 +63,24 @@ class JobRepository extends EntityRepository
             ->getQuery();
     }
 
+    /**
+     * @param Affiliate $affiliate
+     *
+     * @return Job[]
+     */
+    public function findActiveJobsForAffiliate(Affiliate $affiliate)
+    {
+        return $this->createQueryBuilder('j')
+            ->leftJoin('j.category', 'c')
+            ->leftJoin('c.affiliates', 'a')
+            ->where('a.id = :affiliate')
+            ->andWhere('j.expiresAt > :date')
+            ->andWhere('j.activated = :activated')
+            ->setParameter('affiliate', $affiliate)
+            ->setParameter('date', new \DateTime())
+            ->setParameter('activated', true)
+            ->orderBy('j.expiresAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

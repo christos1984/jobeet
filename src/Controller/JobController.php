@@ -26,7 +26,7 @@ class JobController extends Controller
      *
      * @return Response
      */
-    public function list(EntityManagerInterface $em) : Response
+    public function list(EntityManagerInterface $em, JobHistoryService $jobHistoryService) : Response
     {
         // This will display everything
         //$jobs = $this->getDoctrine()->getRepository(Job::class)->findAll();
@@ -37,6 +37,7 @@ class JobController extends Controller
 
         return $this->render('job/list.html.twig', [
             'categories' => $categories,
+            'historyJobs' => $jobHistoryService->getJobs(),
         ]);
     }
 
@@ -60,21 +61,7 @@ class JobController extends Controller
         ]);
     }
 
-    /**
-     *@Route("/job/{token}", name="job.preview", methods="GET")
-     */
-    public function preview(Job $job): Response
-    {
-        $deleteForm = $this->createDeleteForm($job);
-        $publishForm = $this->createPublishForm($job);
 
-        return $this->render('job/show.html.twig', [
-            'job' => $job,
-            'hasControlAccess' => true,
-            'deleteForm' => $deleteForm->createView(),
-            'publishForm' => $publishForm->createView()
-        ]);
-    }
 
     /**
      * Creates a new job entity.
@@ -102,6 +89,22 @@ class JobController extends Controller
 
         return $this->render('job/create.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+     /**
+     *@Route("/job/{token}", name="job.preview", methods="GET")
+     */
+    public function preview(Job $job): Response
+    {
+        $deleteForm = $this->createDeleteForm($job);
+        $publishForm = $this->createPublishForm($job);
+
+        return $this->render('job/show.html.twig', [
+            'job' => $job,
+            'hasControlAccess' => true,
+            'deleteForm' => $deleteForm->createView(),
+            'publishForm' => $publishForm->createView()
         ]);
     }
 
@@ -202,6 +205,5 @@ class JobController extends Controller
             ->setMethod('POST')
             ->getForm();
     }
-
 
 }
